@@ -804,11 +804,9 @@ const MeetingRoom = () => {
   // Waiting Room request emitter (Guest side)
   useEffect(() => {
     if (inWaitingRoom && socket && meeting) {
-      const hostSocketId = 'host'; // placeholder, backend routes based on connection logic
       socket.emit('request-admittance', {
         meetingId,
         user,
-        hostSocketId,
       });
     }
   }, [inWaitingRoom, socket, meeting]);

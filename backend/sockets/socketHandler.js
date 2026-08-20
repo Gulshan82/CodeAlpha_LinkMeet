@@ -1,3 +1,5 @@
+const Meeting = require('../models/Meeting');
+
 module.exports = (io) => {
   // Store active polls in memory per meeting
   // Structure: { meetingId: [ { id, question, options: [{text, votes: []}], creatorSocketId } ] }
@@ -11,7 +13,7 @@ module.exports = (io) => {
     console.log(`Socket connected: ${socket.id}`);
 
     // Join a meeting room (direct entry or after host approves)
-    socket.on('join-room', ({ meetingId, user }) => {
+    socket.on('join-room', async ({ meetingId, user }) => {
       socket.meetingId = meetingId;
       socket.user = user;
       socket.audioMuted = false;
@@ -58,6 +60,24 @@ module.exports = (io) => {
       // Synchronize existing polls for this room to the joining user
       if (activePolls[meetingId]) {
         socket.emit('sync-polls', activePolls[meetingId]);
+      }
+
+      // Check if this joining user is the host
+      try {
+        const meetingDb = await Meeting.findOne({ meetingId });
+        if (meetingDb && meetingDb.host.toString() === user._id.toString()) {
+          // Send all currently waiting requests in the waiting room to this host
+          if (waitingRooms[meetingId] && waitingRooms[meetingId].length > 0) {
+            waitingRooms[meetingId].forEach((waiter) => {
+              socket.emit('waiting-user-join-request', {
+                socketId: waiter.socketId,
+                user: waiter.user,
+              });
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Error syncing waiting room requests on join-room:', err);
       }
     });
 
@@ -190,7 +210,7 @@ module.exports = (io) => {
     });
 
     // Waiting Room requests
-    socket.on('request-admittance', ({ meetingId, user, hostSocketId }) => {
+    socket.on('request-admittance', async ({ meetingId, user }) => {
       // Register socket details for approval phase
       socket.meetingId = meetingId;
       socket.user = user;
@@ -201,12 +221,27 @@ module.exports = (io) => {
       }
       waitingRooms[meetingId].push({ socketId: socket.id, user });
 
-      // Notify host
-      if (hostSocketId) {
-        io.to(hostSocketId).emit('waiting-user-join-request', {
-          socketId: socket.id,
-          user,
-        });
+      // Find the meeting in the database to identify the host user ID
+      try {
+        const meetingDb = await Meeting.findOne({ meetingId });
+        if (meetingDb) {
+          const hostId = meetingDb.host.toString();
+          // Find the active host socket in the meeting room
+          const clients = io.sockets.adapter.rooms.get(meetingId);
+          if (clients) {
+            clients.forEach((clientSocketId) => {
+              const clientSocket = io.sockets.sockets.get(clientSocketId);
+              if (clientSocket && clientSocket.user && clientSocket.user._id.toString() === hostId) {
+                io.to(clientSocketId).emit('waiting-user-join-request', {
+                  socketId: socket.id,
+                  user,
+                });
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Error finding meeting host for waiting room:', err);
       }
     });
 
