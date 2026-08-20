@@ -241,7 +241,7 @@ const MeetingRoom = () => {
 
   // Socket.io WebRTC signal listeners
   useEffect(() => {
-    if (!socket || inWaitingRoom) return;
+    if (!socket) return;
 
     // Handle other users lists (mesh initiator)
     socket.on('room-users', async (usersList) => {
