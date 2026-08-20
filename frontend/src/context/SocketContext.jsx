@@ -20,9 +20,9 @@ export const SocketProvider = ({ children }) => {
     }
 
     // Determine backend socket endpoint dynamically
-    const socketUrl = window.location.hostname === 'localhost' 
+    const socketUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
       ? 'http://localhost:5000' 
-      : window.location.origin;
+      : 'https://linkmeet-mbbu.onrender.com';
 
     const socketInstance = io(socketUrl, {
       auth: { token },
