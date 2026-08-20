@@ -29,6 +29,7 @@ const MeetingRoom = () => {
   // Invite & Copy states
   const [copied, setCopied] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
 
   const handleCopyLink = () => {
     const inviteUrl = window.location.origin + `/meeting/${meetingId}`;
@@ -119,7 +120,8 @@ const MeetingRoom = () => {
           }
         }
       } catch (err) {
-        setErrorText('Failed to verify meeting credentials.');
+        const msg = err.response?.data?.message || 'Failed to verify meeting credentials.';
+        setErrorText(msg);
         console.error(err);
       } finally {
         setLoading(false);
@@ -381,6 +383,12 @@ const MeetingRoom = () => {
       navigate('/dashboard');
     });
 
+    socket.on('meeting-ended', () => {
+      alert('The host has ended this meeting for everyone.');
+      closeAllConnections();
+      navigate('/dashboard');
+    });
+
     return () => {
       socket.off('room-users');
       socket.off('user-joined');
@@ -397,8 +405,28 @@ const MeetingRoom = () => {
       socket.off('admittance-rejected');
       socket.off('mute-command');
       socket.off('kick-command');
+      socket.off('meeting-ended');
     };
   }, [socket, inWaitingRoom, localStream]);
+
+  // Leave / End Meeting helpers
+  const handleLeaveMeeting = () => {
+    closeAllConnections();
+    navigate('/dashboard');
+  };
+
+  const handleEndMeetingForAll = async () => {
+    try {
+      await axios.delete(`/api/meetings/${meetingId}`);
+    } catch (err) {
+      console.error('Failed to end meeting in database:', err);
+    }
+    if (socket) {
+      socket.emit('end-meeting');
+    }
+    closeAllConnections();
+    navigate('/dashboard');
+  };
 
   // Create WebRTC connection
   const createPeerConnection = async (peerSocketId, peerUserInfo, isInitiator) => {
@@ -1482,8 +1510,11 @@ Action Items:
           {/* End Call / Leave room */}
           <button
             onClick={() => {
-              closeAllConnections();
-              navigate('/dashboard');
+              if (isCurrentUserHost) {
+                setShowEndModal(true);
+              } else {
+                handleLeaveMeeting();
+              }
             }}
             className="px-4 py-3 bg-red-600 hover:bg-red-500 text-xs font-semibold rounded-2xl transition flex items-center gap-2 shadow-lg shadow-red-950/20"
           >
@@ -1615,6 +1646,55 @@ Action Items:
                     Copy Full Invitation Info
                   </>
                 )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Host End Meeting Confirmation Modal */}
+      {showEndModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in text-slate-800 dark:text-white">
+          <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 relative flex flex-col shadow-2xl space-y-4">
+            <button
+              onClick={() => setShowEndModal(false)}
+              className="absolute top-4 right-4 p-1.5 bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 rounded-2xl border border-red-200 dark:border-red-900">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">End Call</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Do you want to end this meeting for all participants or just leave?</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2.5 pt-2">
+              <button
+                onClick={handleEndMeetingForAll}
+                className="w-full py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 shadow-lg shadow-red-950/20"
+              >
+                <VideoOff className="w-4 h-4" />
+                End Meeting for Everyone
+              </button>
+
+              <button
+                onClick={handleLeaveMeeting}
+                className="w-full py-3 bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Just Leave
+              </button>
+
+              <button
+                onClick={() => setShowEndModal(false)}
+                className="w-full py-2 text-xs font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+              >
+                Cancel
               </button>
             </div>
           </div>

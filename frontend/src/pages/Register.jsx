@@ -106,9 +106,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col lg:flex-row selection:bg-primary-500 selection:text-white overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex flex-col lg:flex-row selection:bg-primary-500 selection:text-white overflow-hidden transition-colors duration-300">
       {/* Left Panel - Branding & Visuals (Visible on lg screens only) */}
-      <div className="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-slate-900 via-slate-950 to-primary-950 p-12 flex-col justify-between border-r border-slate-900 relative overflow-hidden shrink-0">
+      <div className="hidden lg:flex lg:w-[40%] bg-gradient-to-br from-slate-900 via-slate-950 to-primary-950 p-12 flex-col justify-between border-r border-slate-200 dark:border-slate-900 relative overflow-hidden shrink-0">
         {/* Decorative background gradients */}
         <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] rounded-full bg-primary-600/10 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[80%] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none" />
@@ -153,29 +153,29 @@ const Register = () => {
       </div>
 
       {/* Right Panel - Form (Centered container) */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-slate-950 overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-slate-50 dark:bg-slate-950 overflow-y-auto transition-colors duration-300">
         {/* Mobile Header (Hidden on lg screens) */}
         <div className="absolute top-8 left-8 lg:hidden flex items-center gap-2">
           <Link to="/" className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
             <Video className="w-4 h-4 text-white" />
           </Link>
-          <span className="text-sm font-bold text-white">LinkMeet</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-white">LinkMeet</span>
         </div>
 
         {/* Container Card */}
-        <div className="max-w-md w-full glass-premium p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl relative animate-fade-in my-8">
+        <div className="max-w-md w-full glass-premium p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 shadow-2xl relative animate-fade-in my-8 bg-white/60 dark:bg-slate-900/40">
           {/* Header */}
           <div className="flex flex-col items-center text-center space-y-2">
             <Link to="/" className="w-12 h-12 bg-primary-600 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-900/30">
               <Video className="w-6 h-6 text-white" />
             </Link>
-            <h2 className="text-xl font-bold tracking-wide mt-2 text-white">Create Account</h2>
-            <p className="text-slate-500 text-xs font-medium">Join LinkMeet workspace and collaborate</p>
+            <h2 className="text-xl font-bold tracking-wide mt-2 text-slate-900 dark:text-white">Create Account</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Join LinkMeet workspace and collaborate</p>
           </div>
 
           {/* Errors display */}
           {errorMsg && (
-            <div className="p-3 bg-red-950/40 border border-red-900/60 rounded-xl flex items-center gap-2.5 text-xs text-red-400">
+            <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl flex items-center gap-2.5 text-xs text-red-600 dark:text-red-400">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -186,11 +186,11 @@ const Register = () => {
             {/* Avatar selector */}
             <div className="flex flex-col items-center space-y-2">
               <div className="relative group">
-                <div className="w-20 h-20 bg-slate-900 rounded-full border-2 border-slate-800 overflow-hidden shadow-inner flex items-center justify-center">
+                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-900 rounded-full border-2 border-slate-200 dark:border-slate-800 overflow-hidden shadow-inner flex items-center justify-center">
                   {previewUrl ? (
                     <img src={previewUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
                   ) : (
-                    <User className="w-8 h-8 text-slate-600" />
+                    <User className="w-8 h-8 text-slate-400 dark:text-slate-600" />
                   )}
                 </div>
                 <label className="absolute bottom-0 right-0 p-1.5 bg-primary-600 text-white rounded-full cursor-pointer hover:bg-primary-500 hover:scale-110 transition shadow-md shadow-primary-950/50">
@@ -203,66 +203,66 @@ const Register = () => {
                   />
                 </label>
               </div>
-              <span className="text-[10px] text-slate-500 font-medium">Upload profile image (optional)</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Upload profile image (optional)</span>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">Full Name</label>
+              <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 tracking-wider uppercase">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Alex Carter"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 text-xs text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-600"
+                  className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-400 dark:placeholder-slate-600 shadow-sm"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">Email Address</label>
+              <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 tracking-wider uppercase">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 text-xs text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-600"
+                  className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-400 dark:placeholder-slate-600 shadow-sm"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">Password</label>
+                <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 tracking-wider uppercase">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 text-xs text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-600"
+                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-400 dark:placeholder-slate-600 shadow-sm"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">Confirm Pass</label>
+                <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 tracking-wider uppercase">Confirm Pass</label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
                   <input
                     type="password"
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 text-xs text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-600"
+                    className="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white rounded-xl focus:outline-none focus:border-primary-500 transition placeholder-slate-400 dark:placeholder-slate-600 shadow-sm"
                   />
                 </div>
               </div>
@@ -286,17 +286,17 @@ const Register = () => {
 
           {/* Divider */}
           <div className="relative flex items-center justify-center my-4">
-            <div className="border-t border-slate-800 w-full"></div>
-            <span className="bg-[#0f172a]/95 px-3 text-[10px] text-slate-500 font-semibold tracking-wider uppercase absolute">Or continue with</span>
+            <div className="border-t border-slate-200 dark:border-slate-800 w-full"></div>
+            <span className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-full px-3 py-0.5 text-[10px] text-slate-500 dark:text-slate-400 font-semibold tracking-wider uppercase absolute">Or continue with</span>
           </div>
 
           {/* Google Button */}
           <div id="googleSignUpBtn" className="w-full flex justify-center"></div>
 
           {/* Login redirect */}
-          <div className="text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
+          <div className="text-center text-xs text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-900 pt-4">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-400 font-semibold hover:underline">
+            <Link to="/login" className="text-primary-600 dark:text-primary-400 font-semibold hover:underline">
               Sign in
             </Link>
           </div>

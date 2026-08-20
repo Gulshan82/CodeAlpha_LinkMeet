@@ -126,6 +126,17 @@ const getMeetingById = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Meeting not found' });
     }
 
+    // Check if meeting has expired (started more than 24 hours ago)
+    const MAX_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const startTimeMs = new Date(meeting.startTime || meeting.createdAt).getTime();
+    if (Date.now() - startTimeMs > MAX_DURATION_MS) {
+      if (!meeting.endTime) {
+        meeting.endTime = new Date();
+        await meeting.save();
+      }
+      return res.status(400).json({ success: false, message: 'This meeting has expired after 24 hours.' });
+    }
+
     // Add user as a participant if not already in list
     if (!meeting.participants.some(p => p._id.toString() === req.user._id.toString())) {
       meeting.participants.push(req.user._id);

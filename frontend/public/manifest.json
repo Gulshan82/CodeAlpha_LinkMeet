@@ -1,0 +1,32 @@
+{
+  "short_name": "LinkMeet",
+  "name": "LinkMeet",
+  "description": "Premium real-time video conferencing, screen sharing, interactive whiteboard, and polls.",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["productivity", "communication", "utilities"]
+}

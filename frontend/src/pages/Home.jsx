@@ -147,7 +147,7 @@ const Home = () => {
 
               <div className="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-lg border border-slate-850 text-[10px] font-semibold text-slate-200 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span>
-                Sarah J. (Host)
+                Gulshan (Host)
               </div>
 
               <div className="absolute bottom-3 right-3 flex gap-1.5">

@@ -239,6 +239,17 @@ module.exports = (io) => {
       io.to(targetSocketId).emit('kick-command');
     });
 
+    // End meeting for everyone handler (Host action)
+    socket.on('end-meeting', () => {
+      const meetingId = socket.meetingId;
+      if (meetingId) {
+        console.log(`Host ended meeting room: ${meetingId}`);
+        io.to(meetingId).emit('meeting-ended');
+        delete activePolls[meetingId];
+        delete waitingRooms[meetingId];
+      }
+    });
+
     // Client disconnection handler
     socket.on('disconnect', () => {
       console.log(`Socket disconnected: ${socket.id}`);
