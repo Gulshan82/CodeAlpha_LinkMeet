@@ -29,7 +29,7 @@ const Login = () => {
     const initializeGoogle = () => {
       if (window.google) {
         window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1047120610363-placeholder.apps.googleusercontent.com',
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '574398567303-6itqudah977cri30jcn6cf03ppljp8vc.apps.googleusercontent.com',
           callback: handleGoogleCallback,
         });
 
